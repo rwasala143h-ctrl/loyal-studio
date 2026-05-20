@@ -1,10 +1,10 @@
 /* ============================================
-   LOYAL STUDIO — PHOTOGRAPHY PORTFOLIO
+   LOYAL STUDIO â€” PHOTOGRAPHY PORTFOLIO
    CSS Custom Properties & Global Reset
    ============================================ */
 
 :root {
-    /* Color Palette — Deep Charcoal Dark Mode */
+    /* Color Palette â€” Deep Charcoal Dark Mode */
     --color-bg: #0a0a0a;
     --color-bg-elevated: #111111;
     --color-bg-card: #161616;
@@ -205,7 +205,7 @@ button {
 }
 
 /* ============================================
-   NAVIGATION — Sticky with scroll opacity
+   NAVIGATION â€” Sticky with scroll opacity
    ============================================ */
 
 .navbar {
@@ -221,7 +221,7 @@ button {
         box-shadow var(--transition-base);
 }
 
-/* Scrolled state — applied via JS */
+/* Scrolled state â€” applied via JS */
 .navbar.scrolled {
     background-color: rgba(10, 10, 10, 0.92);
     backdrop-filter: blur(20px);
@@ -458,7 +458,7 @@ button {
 }
 
 /* ============================================
-   PORTFOLIO SECTION — Masonry Grid Gallery
+   PORTFOLIO SECTION â€” Masonry Grid Gallery
    ============================================ */
 
 .portfolio {
@@ -598,7 +598,7 @@ button {
 }
 
 /* ============================================
-   ABOUT SECTION — Two Column Layout
+   ABOUT SECTION â€” Two Column Layout
    ============================================ */
 
 .about {
