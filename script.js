@@ -1,5 +1,5 @@
 /**
- * LOYAL STUDIO — PHOTOGRAPHY PORTFOLIO
+ * LOYAL STUDIO â€” PHOTOGRAPHY PORTFOLIO
  * Vanilla JavaScript Features:
  * 1. Sticky Navbar with scroll opacity
  * 2. Smooth scrolling for nav links
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let visibleItems = [...galleryItems]; // Tracks currently visible (filtered) items
     
     // ============================================
-    // 1. STICKY NAVBAR — Background opacity on scroll
+    // 1. STICKY NAVBAR â€” Background opacity on scroll
     // ============================================
     function handleNavbarScroll() {
         if (window.scrollY > 50) {
