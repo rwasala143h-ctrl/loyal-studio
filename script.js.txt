@@ -1,0 +1,398 @@
+/**
+ * LOYAL STUDIO — PHOTOGRAPHY PORTFOLIO
+ * Vanilla JavaScript Features:
+ * 1. Sticky Navbar with scroll opacity
+ * 2. Smooth scrolling for nav links
+ * 3. Mobile hamburger menu
+ * 4. Portfolio filtering
+ * 5. Full-screen Lightbox with navigation
+ * 6. Animated counter stats
+ * 7. Contact form validation
+ * 8. Active nav link highlighting on scroll
+ */
+
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // ============================================
+    // DOM ELEMENT REFERENCES
+    // ============================================
+    const navbar = document.getElementById('navbar');
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+    const navLinkItems = document.querySelectorAll('.nav-link');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightboxImage');
+    const lightboxCaption = document.getElementById('lightboxCaption');
+    const lightboxCounter = document.getElementById('lightboxCounter');
+    const lightboxClose = document.getElementById('lightboxClose');
+    const lightboxPrev = document.getElementById('lightboxPrev');
+    const lightboxNext = document.getElementById('lightboxNext');
+    const contactForm = document.getElementById('contactForm');
+    const formSuccess = document.getElementById('formSuccess');
+    const statNumbers = document.querySelectorAll('.stat-number');
+    
+    // State
+    let currentImageIndex = 0;
+    let visibleItems = [...galleryItems]; // Tracks currently visible (filtered) items
+    
+    // ============================================
+    // 1. STICKY NAVBAR — Background opacity on scroll
+    // ============================================
+    function handleNavbarScroll() {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    }
+    
+    window.addEventListener('scroll', handleNavbarScroll);
+    handleNavbarScroll(); // Check on load
+    
+    // ============================================
+    // 2. MOBILE HAMBURGER MENU
+    // ============================================
+    navToggle.addEventListener('click', () => {
+        navToggle.classList.toggle('active');
+        navLinks.classList.toggle('active');
+        // Prevent body scroll when menu is open
+        document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+    });
+    
+    // Close mobile menu when a link is clicked
+    navLinkItems.forEach(link => {
+        link.addEventListener('click', () => {
+            navToggle.classList.remove('active');
+            navLinks.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    });
+    
+    // ============================================
+    // 3. SMOOTH SCROLLING + ACTIVE NAV HIGHLIGHTING
+    // ============================================
+    
+    // Smooth scroll for nav links
+    navLinkItems.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href');
+            const targetSection = document.querySelector(targetId);
+            
+            if (targetSection) {
+                const offsetTop = targetSection.offsetTop - navbar.offsetHeight;
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+    
+    // Highlight active nav link based on scroll position
+    function highlightActiveNav() {
+        const scrollPos = window.scrollY + navbar.offsetHeight + 100;
+        
+        document.querySelectorAll('section').forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.offsetHeight;
+            const sectionId = section.getAttribute('id');
+            
+            if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                navLinkItems.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${sectionId}`) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        });
+    }
+    
+    window.addEventListener('scroll', highlightActiveNav);
+    
+    // ============================================
+    // 4. PORTFOLIO FILTERING
+    // ============================================
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Update active button
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            const filter = btn.getAttribute('data-filter');
+            
+            // Filter gallery items with fade animation
+            galleryItems.forEach(item => {
+                const category = item.getAttribute('data-category');
+                
+                if (filter === 'all' || category === filter) {
+                    item.classList.remove('hidden');
+                    // Small delay for staggered appearance
+                    item.style.animation = 'fadeInUp 0.5s ease forwards';
+                } else {
+                    item.classList.add('hidden');
+                    item.style.animation = '';
+                }
+            });
+            
+            // Update visible items array for lightbox navigation
+            visibleItems = [...document.querySelectorAll('.gallery-item:not(.hidden)')];
+        });
+    });
+    
+    // ============================================
+    // 5. LIGHTBOX FUNCTIONALITY
+    // ============================================
+    
+    // Open lightbox when clicking a gallery item
+    galleryItems.forEach(item => {
+        item.addEventListener('click', () => {
+            // Only open if item is visible (not filtered out)
+            if (item.classList.contains('hidden')) return;
+            
+            const index = parseInt(item.getAttribute('data-index'));
+            openLightbox(index);
+        });
+    });
+    
+    function openLightbox(index) {
+        currentImageIndex = index;
+        updateLightboxContent();
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent background scroll
+    }
+    
+    function closeLightbox() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    
+    function updateLightboxContent() {
+        // Find the item in currently visible items
+        const item = visibleItems.find(el => parseInt(el.getAttribute('data-index')) === currentImageIndex);
+        
+        if (!item) return;
+        
+        const img = item.querySelector('img');
+        const title = item.querySelector('.gallery-info h3').textContent;
+        const category = item.querySelector('.gallery-info p').textContent;
+        
+        // Fade out current image
+        lightboxImage.style.opacity = '0';
+        
+        setTimeout(() => {
+            lightboxImage.src = img.src;
+            lightboxImage.alt = img.alt;
+            lightboxCaption.querySelector('h3').textContent = title;
+            lightboxCaption.querySelector('p').textContent = category;
+            lightboxCounter.textContent = `${visibleItems.indexOf(item) + 1} / ${visibleItems.length}`;
+            
+            // Fade in new image
+            lightboxImage.style.opacity = '1';
+        }, 200);
+    }
+    
+    function nextImage() {
+        const currentVisibleIndex = visibleItems.findIndex(el => parseInt(el.getAttribute('data-index')) === currentImageIndex);
+        const nextIndex = (currentVisibleIndex + 1) % visibleItems.length;
+        currentImageIndex = parseInt(visibleItems[nextIndex].getAttribute('data-index'));
+        updateLightboxContent();
+    }
+    
+    function prevImage() {
+        const currentVisibleIndex = visibleItems.findIndex(el => parseInt(el.getAttribute('data-index')) === currentImageIndex);
+        const prevIndex = (currentVisibleIndex - 1 + visibleItems.length) % visibleItems.length;
+        currentImageIndex = parseInt(visibleItems[prevIndex].getAttribute('data-index'));
+        updateLightboxContent();
+    }
+    
+    // Event listeners for lightbox controls
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightboxNext.addEventListener('click', (e) => {
+        e.stopPropagation();
+        nextImage();
+    });
+    lightboxPrev.addEventListener('click', (e) => {
+        e.stopPropagation();
+        prevImage();
+    });
+    
+    // Close on background click
+    lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+            closeLightbox();
+        }
+    });
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+        
+        switch(e.key) {
+            case 'Escape':
+                closeLightbox();
+                break;
+            case 'ArrowRight':
+                nextImage();
+                break;
+            case 'ArrowLeft':
+                prevImage();
+                break;
+        }
+    });
+    
+    // ============================================
+    // 6. ANIMATED COUNTER STATS (Intersection Observer)
+    // ============================================
+    const animateCounter = (element) => {
+        const target = parseInt(element.getAttribute('data-target'));
+        const duration = 2000; // 2 seconds
+        const startTime = performance.now();
+        const startValue = 0;
+        
+        function updateCounter(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // Easing function (ease-out cubic)
+            const easeOut = 1 - Math.pow(1 - progress, 3);
+            const currentValue = Math.floor(startValue + (target - startValue) * easeOut);
+            
+            element.textContent = currentValue;
+            
+            if (progress < 1) {
+                requestAnimationFrame(updateCounter);
+            } else {
+                element.textContent = target;
+            }
+        }
+        
+        requestAnimationFrame(updateCounter);
+    };
+    
+    // Use Intersection Observer to trigger counter animation
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counters = entry.target.querySelectorAll('.stat-number');
+                counters.forEach(counter => {
+                    if (!counter.classList.contains('animated')) {
+                        counter.classList.add('animated');
+                        animateCounter(counter);
+                    }
+                });
+                counterObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    const statsContainer = document.querySelector('.about-stats');
+    if (statsContainer) {
+        counterObserver.observe(statsContainer);
+    }
+    
+    // ============================================
+    // 7. CONTACT FORM VALIDATION & HANDLING
+    // ============================================
+    contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        let isValid = true;
+        const formGroups = contactForm.querySelectorAll('.form-group');
+        
+        // Validate each field
+        formGroups.forEach(group => {
+            const input = group.querySelector('input, textarea');
+            const value = input.value.trim();
+            
+            group.classList.remove('error');
+            
+            if (!value) {
+                group.classList.add('error');
+                isValid = false;
+            }
+            
+            // Email validation
+            if (input.type === 'email' && value) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(value)) {
+                    group.classList.add('error');
+                    isValid = false;
+                }
+            }
+        });
+        
+        if (isValid) {
+            // Simulate form submission
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span>Sending...</span><i class="fas fa-spinner fa-spin"></i>';
+            
+            setTimeout(() => {
+                // Show success message
+                formSuccess.classList.add('show');
+                contactForm.reset();
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+                
+                // Hide success message after 5 seconds
+                setTimeout(() => {
+                    formSuccess.classList.remove('show');
+                }, 5000);
+            }, 1500);
+        }
+    });
+    
+    // Real-time validation removal on input
+    contactForm.querySelectorAll('input, textarea').forEach(input => {
+        input.addEventListener('input', () => {
+            input.closest('.form-group').classList.remove('error');
+        });
+    });
+    
+    // ============================================
+    // 8. SCROLL REVEAL ANIMATIONS
+    // ============================================
+    const revealElements = document.querySelectorAll('.section-header, .about-content, .about-image, .contact-form, .info-card');
+    
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -50px 0px'
+    });
+    
+    revealElements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+        revealObserver.observe(el);
+    });
+    
+    // ============================================
+    // 9. HERO PARALLAX EFFECT (subtle)
+    // ============================================
+    const heroBg = document.querySelector('.hero-bg');
+    
+    window.addEventListener('scroll', () => {
+        if (window.innerWidth > 768) { // Disable on mobile for performance
+            const scrolled = window.scrollY;
+            const rate = scrolled * 0.3;
+            if (heroBg) {
+                heroBg.style.transform = `translateY(${rate}px)`;
+            }
+        }
+    });
+    
+}); // End DOMContentLoaded
