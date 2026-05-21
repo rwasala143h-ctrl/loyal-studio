@@ -63,13 +63,45 @@ html {
 }
 
 body {
-    font-family: var(--font-body);
-    background-color: #0d0d0d;
-    color: #ffffff;
-    line-height: 1.6;
+        font-family: 'Playfair Display', var(--font-body);
+    background-color: #08080a !important;
+    color: #e5e5e7 !important;
+    line-height: 1.8;
     overflow-x: hidden;
+    letter-spacing: 0.5px;
 }
 
+h1, .portfolio-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 500;
+    letter-spacing: -1px;
+    text-transform: capitalize;
+    background: linear-gradient(to right, #ffffff, #a3a3a3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.selected-works-tag {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #cca43b !important;
+}
+
+.filter-button-class {
+    background: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #999999 !important;
+    padding: 8px 20px;
+    border-radius: 4px;
+    transition: all 0.4s ease;
+}
+
+.filter-button-class:hover, .filter-button-class.active {
+    border-color: #ffffff !important;
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+}
 img {
     max-width: 100%;
     height: auto;
