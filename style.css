@@ -64,8 +64,8 @@ html {
 
 body {
     font-family: var(--font-body);
-    background-color: var(--color-bg);
-    color: var(--color-text-primary);
+    background-color: #0d0d0d;
+    color: #ffffff;
     line-height: 1.6;
     overflow-x: hidden;
 }
