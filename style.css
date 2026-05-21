@@ -63,14 +63,14 @@ html {
 }
 
 body {
-        font-family: 'Playfair Display', var(--font-body);
-    background-color: #08080a !important;
+    font-family: 'Playfair Display', var(--font-body);
+    /* සිනමාටික් Gradient පසුබිම (මැද ලා පැහැති වන අතර දෙපැත්ත Deep Dark වේ) */
+    background: radial-gradient(circle at center, #11141a 0%, #07080a 70%, #030405 100%) !important;
     color: #e5e5e7 !important;
     line-height: 1.8;
     overflow-x: hidden;
     letter-spacing: 0.5px;
 }
-
 h1, .portfolio-title {
     font-family: 'Playfair Display', serif;
     font-weight: 500;
